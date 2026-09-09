@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blooming Bouquet — Hanakotoba</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<style>
+
+/* =========================================================
+   RESET & ROOT
+========================================================= */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 100%; min-height: 100%; }
+
+:root{
+    --ink:        #5c2a3a;
+    --ink-soft:   #8a5866;
+    --cream:      #fffaf4;
+    --gold:       #c79a5c;
+    --gold-soft:  #e7cfa1;
+    --rose-red:   #c94e7b;
+    --paper-blush:#f2c7d1;
+    --paper-cream:#fbf3ec;
+}
+
+body{
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: "Playfair Display", Georgia, serif;
+    color: var(--ink);
+    background: radial-gradient(circle at 50% 8%, #fff6ee 0%, #fbe4e1 36%, #e7c3cd 66%, #c98fa0 100%);
+}
+
+/* =========================================================
+   SCENE
+========================================================= */
+.scene{
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: hidden;
+    padding: 34px 0 130px;
+}
+
+.glow{
+    position: absolute;
+    width: 760px; height: 760px;
+    top: -300px; left: 50%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,224,180,.5), rgba(255,255,255,0) 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.bokeh{
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.85), rgba(255,214,225,.15) 70%);
+    filter: blur(1px);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+    animation: bokehFloat linear infinite;
+}
+@keyframes bokehFloat{
+    0%   { opacity: 0; transform: translateY(30px) scale(.6); }
+    12%  { opacity: .5; }
+    88%  { opacity: .38; }
+    100% { opacity: 0; transform: translateY(-240px) scale(1); }
+}
+
+/* =========================================================
+   HINT TEXT (replaces old static name labels)
+========================================================= */
+.hint-text{
+    position: absolute;
+    top: 12px; left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    text-align: center;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(15px, 2.6vw, 18px);
+    color: var(--ink-soft);
+    opacity: 0;
+    z-index: 70;
+    letter-spacing: .3px;
+}
+.hint-text.show{ animation: hintIn 1.3s cubic-bezier(.16,1,.3,1) forwards; }
+@keyframes hintIn{
+    0%   { opacity: 0; transform: translateX(-50%) translateY(4px); }
+    100% { opacity: .85; transform: translateX(-50%) translateY(0); }
+}
+
+/* =========================================================
+   BOUQUET CONTAINER
+========================================================= */
+.bouquet{
+    position: relative;
+    width: min(94vw, 740px);
+    height: 900px;
+    margin-top: 46px;
+    perspective: 1300px;
+}
+
+/* =========================================================
+   WRAPPING PAPER — bigger, clearer, wraps the low blooms
+   while the sunflowers rise proudly above it
+========================================================= */
+.paper-back{
+    position: absolute;
+    left: 50%; bottom: 20px;
+    transform: translateX(-50%) scaleY(0);
+    transform-origin: bottom center;
+    width: 660px; height: 820px;
+    background:
+        linear-gradient(160deg, #fff6f0 0%, #f9dbe2 22%, #f0b8c8 48%, #e39fb5 70%, #f3c9d4 88%, #fff6f0 100%);
+    clip-path: polygon(12% 0%, 88% 0%, 100% 40%, 64% 100%, 36% 100%, 0% 40%);
+    opacity: 0;
+    z-index: 1;
+    box-shadow: inset 0 0 0 2px rgba(255,255,255,.55);
+    filter: drop-shadow(0 26px 34px rgba(120,50,70,.28));
+}
+.paper-back::before{
+    content: "";
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(112deg, rgba(255,255,255,.55) 0 2px, transparent 2px 30px);
+    opacity: .35;
+    mix-blend-mode: overlay;
+}
+.paper-back::after{
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,.3), transparent 30%, transparent 70%, rgba(90,30,50,.12));
+}
+
+.paper-front{
+    position: absolute;
+    z-index: 15;
+    left: 50%; bottom: 10px;
+    transform: translateX(-50%) scaleY(0);
+    transform-origin: bottom center;
+    width: 460px; height: 560px;
+    background:
+        linear-gradient(160deg, #fffaf5 0%, #fbe6ea 20%, #f3c3d0 50%, #fbe6ea 80%, #fffaf5 100%);
+    clip-path: polygon(10% 0%, 90% 0%, 100% 42%, 62% 100%, 38% 100%, 0% 42%);
+    opacity: 0;
+    filter: drop-shadow(0 18px 24px rgba(140,50,80,.28));
+}
+.paper-front::before{
+    content: "";
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(108deg, rgba(255,255,255,.5) 0 2px, transparent 2px 24px);
+    opacity: .4;
+    mix-blend-mode: overlay;
+}
+
+/* =========================================================
+   FLOWER LAYER — always drawn ABOVE the paper
+========================================================= */
+.flowers{
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    transform-style: preserve-3d;
+}
+
+/* clickable affordance */
+.sunflower, .carnation, .rose, .daisy{ cursor: pointer; }
+.sun-head, .carnation-head, .rose-head, .daisy-head{
+    transition: transform .3s ease, filter .3s ease;
+}
+.sun-head:hover, .carnation-head:hover, .rose-head:hover, .daisy-head:hover{
+    transform: scale(1.06);
+    filter: brightness(1.04) drop-shadow(0 10px 18px rgba(120,40,70,.3));
+}
+
+/* =========================================================
+   GENERIC STEM
+========================================================= */
+.stem{
+    position: absolute;
+    bottom: 0; left: 50%;
+    width: 11px; height: 0;
+    transform: translateX(-50%) scaleY(0);
+    transform-origin: bottom center;
+    border-radius: 20px;
+    background: linear-gradient(90deg,#175e2b,#3eaa49,#238039,#125c28);
+    box-shadow: inset 2px 0 2px rgba(255,255,255,.22), 3px 0 8px rgba(40,70,35,.2);
+}
+.grow-stem{ animation: stemGrowth 1.8s cubic-bezier(.2,.9,.25,1) forwards; }
+@keyframes stemGrowth{
+    0%   { height: 0; transform: translateX(-50%) scaleY(.05); }
+    70%  { transform: translateX(-50%) scaleY(1.04); }
+    100% { transform: translateX(-50%) scaleY(1); }
+}
+
+/* =========================================================
+   LEAVES
+========================================================= */
+.leaf{
+    position: absolute;
+    width: 100px; height: 46px;
+    border-radius: 100% 0 100% 0;
+    background: linear-gradient(135deg,#5cc061 0%,#2e8b3b 45%,#12481f 100%);
+    opacity: 0;
+    transform: scale(0) rotate(-25deg);
+    transform-origin: 0 50%;
+    filter: drop-shadow(3px 5px 5px rgba(20,55,25,.25));
+}
+.leaf::after{
+    content: "";
+    position: absolute;
+    width: 75px; height: 2px;
+    top: 50%; left: 8px;
+    transform: rotate(-7deg);
+    background: rgba(255,255,255,.25);
+    border-radius: 10px;
+}
+.leaf::before{
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(ellipse at 25% 20%, rgba(255,255,255,.35), rgba(255,255,255,0) 55%);
+}
+.leaf.show{ animation: leafGrow .9s cubic-bezier(.16,1,.3,1) forwards; }
+@keyframes leafGrow{
+    0%   { opacity: 0; transform: scale(0) rotate(-30deg); }
+    70%  { opacity: 1; transform: scale(1.08) rotate(-3deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+/* =========================================================
+   SUNFLOWER  — triangle: 1 top, 2 below, rising above the wrap
+========================================================= */
+.sunflower{ position: absolute; width: 186px; height: 330px; transform-style: preserve-3d; }
+.sunflower.top   { left: 50%; top: 0px;  transform: translateX(-50%); }
+.sunflower.left  { left: 0%;  top: 62px; }
+.sunflower.right { right: 0%; top: 62px; }
+.sunflower .stem{ height: 190px; }
+
+.sun-head{
+    position: absolute;
+    width: 168px; height: 168px;
+    left: 9px; top: 0;
+    border-radius: 50%;
+    transform: scale(.18);
+    transform-origin: center bottom;
+    opacity: 0;
+    transform-style: preserve-3d;
+}
+.sun-head.open{ animation: sunflowerHead 1s cubic-bezier(.16,1,.3,1) forwards; }
+@keyframes sunflowerHead{
+    0%   { opacity: 0; transform: scale(.15); }
+    60%  { opacity: 1; transform: scale(1.08); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.sun-petal{
+    position: absolute;
+    width: 36px; height: 88px;
+    left: 66px; top: 0px;
+    border-radius: 55% 55% 48% 48%;
+    background: linear-gradient(100deg,#c98600 0%,#ffc928 28%,#fff0a3 48%,#ffdc4c 58%,#e7a400 100%);
+    transform-origin: 50% 100%;
+    transform: rotate(var(--angle)) rotateX(18deg) scaleY(.05);
+    opacity: 0;
+    box-shadow:
+        inset 4px 0 5px rgba(255,255,255,.4),
+        inset -5px 0 7px rgba(130,75,0,.22),
+        3px 5px 7px rgba(120,70,0,.2);
+}
+.sun-petal::after{
+    content: "";
+    position: absolute;
+    left: 30%; top: 8%;
+    width: 34%; height: 42%;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(255,255,255,.55), rgba(255,255,255,0) 70%);
+}
+.sun-head.open .sun-petal{
+    animation: petalOpen 1.15s cubic-bezier(.16,1,.3,1) forwards;
+    animation-delay: calc(var(--i) * 45ms);
+}
+@keyframes petalOpen{
+    0%   { opacity: 0; transform: rotate(var(--angle)) rotateX(18deg) scaleY(.05); }
+    50%  { opacity: 1; transform: rotate(var(--angle)) rotateX(18deg) scaleY(1.08); }
+    100% { opacity: 1; transform: rotate(var(--angle)) rotateX(18deg) scaleY(1); }
+}
+
+.sun-center{
+    position: absolute;
+    left: 41px; top: 41px;
+    width: 86px; height: 86px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 26%, #8a5a3c 0%, #63361f 45%, #2c1409 100%);
+    border: 7px solid #855022;
+    box-shadow:
+        inset 5px 5px 6px rgba(255,255,255,.16),
+        inset -8px -9px 12px rgba(0,0,0,.3),
+        4px 8px 14px rgba(60,30,15,.35);
+    z-index: 20;
+    transform: scale(0);
+}
+.sun-head.open .sun-center{ animation: centerAppear .8s .65s cubic-bezier(.16,1,.3,1) forwards; }
+@keyframes centerAppear{
+    from { transform: scale(0); }
+    70%  { transform: scale(1.08); }
+    to   { transform: scale(1); }
+}
+.sun-center::before{
+    content: "";
+    position: absolute; inset: 11px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #1c0d08 2px, transparent 3px);
+    background-size: 13px 13px;
+    opacity: .7;
+}
+.sun-center::after{
+    content: "";
+    position: absolute;
+    left: 14%; top: 12%;
+    width: 30%; height: 26%;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(255,220,150,.4), rgba(255,255,255,0) 70%);
+}
+
+/* =========================================================
+   CARNATION — gathered at the wrap's mouth
+========================================================= */
+.carnation{ position: absolute; width: 200px; height: 260px; left: 50%; top: 232px; transform: translateX(-50%); transform-style: preserve-3d; }
+.carnation .stem{ height: 150px; }
+
+.carnation-head{
+    position: absolute;
+    left: 20px; top: 0;
+    width: 160px; height: 150px;
+    border-radius: 50%;
+    transform: scale(.15);
+    opacity: 0;
+    transform-style: preserve-3d;
+}
+.carnation-head.open{ animation: carnationBloom 1.4s cubic-bezier(.16,1,.3,1) forwards; }
+@keyframes carnationBloom{
+    0%   { opacity: 0; transform: scale(.15); }
+    60%  { opacity: 1; transform: scale(1.08); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.carnation-layer{
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%,-50%) scale(.2);
+    width: var(--size); height: var(--size);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ffd3e2 0%, #f48fb1 48%, #c4477c 100%);
+    box-shadow:
+        inset 0 6px 6px rgba(255,255,255,.45),
+        inset 0 -10px 12px rgba(130,30,70,.24);
+    clip-path: polygon(50% 0%,56% 9%,64% 3%,69% 13%,78% 8%,82% 19%,92% 17%,91% 29%,100% 34%,92% 43%,98% 52%,88% 57%,94% 68%,82% 70%,84% 82%,72% 79%,68% 91%,58% 84%,50% 100%,43% 89%,32% 95%,29% 83%,17% 86%,19% 74%,7% 71%,12% 60%,2% 54%,10% 44%,1% 35%,11% 29%,8% 18%,20% 20%,23% 9%,34% 14%,42% 4%);
+}
+.carnation-head.open .carnation-layer{
+    animation: carnationLayer 1s cubic-bezier(.16,1,.3,1) forwards;
+    animation-delay: calc(var(--layer) * 150ms);
+}
+@keyframes carnationLayer{
+    from { transform: translate(-50%,-50%) scale(.15) rotate(-15deg) rotateX(14deg); }
+    70%  { transform: translate(-50%,-50%) scale(1.06) rotate(5deg) rotateX(14deg); }
+    to   { transform: translate(-50%,-50%) scale(1) rotate(0) rotateX(14deg); }
+}
+
+/* =========================================================
+   ROSE — pinching the carnation on both sides
+========================================================= */
+.rose{ position: absolute; width: 160px; height: 250px; top: 258px; transform-style: preserve-3d; }
+.rose.left{ left: 15%; }
+.rose.right{ right: 15%; }
+.rose .stem{ height: 150px; }
+
+.rose-head{
+    position: absolute;
+    left: 22px; top: 0;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    transform: scale(.1);
+    opacity: 0;
+    transform-style: preserve-3d;
+}
+.rose-head.open{ animation: roseBloom 1.25s cubic-bezier(.16,1,.3,1) forwards; }
+@keyframes roseBloom{
+    0%   { opacity: 0; transform: scale(.1) rotate(-20deg); }
+    65%  { opacity: 1; transform: scale(1.08) rotate(4deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+.rose-outer{
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 26%, #ffd9e6 0%, #f28db1 33%, #d24d78 68%, #9c2952 100%);
+    box-shadow:
+        inset 7px 8px 9px rgba(255,255,255,.4),
+        inset -8px -10px 13px rgba(110,15,55,.3),
+        4px 8px 12px rgba(100,40,60,.25);
+}
+.rose-petal{
+    position: absolute;
+    border-radius: 50%;
+    border: 3px solid rgba(160,45,90,.5);
+    background: linear-gradient(150deg,#ffdde8,#ee8db2 55%,#bc4470);
+    box-shadow:
+        inset 3px 3px 4px rgba(255,255,255,.45),
+        inset -3px -3px 5px rgba(110,25,65,.22);
+    transform: scale(.2) rotateX(16deg);
+    opacity: 0;
+}
+.rose-head.open .rose-petal{ animation: rosePetal .9s cubic-bezier(.16,1,.3,1) forwards; }
+@keyframes rosePetal{
+    from { opacity: 0; transform: scale(.2) rotate(-20deg) rotateX(16deg); }
+    70%  { opacity: 1; transform: scale(1.08) rotate(5deg) rotateX(16deg); }
+    to   { opacity: 1; transform: scale(1) rotate(0) rotateX(16deg); }
+}
+.rp1{ width: 65px; height: 48px; left: 22px; top: 33px; }
+.rp2{ width: 60px; height: 45px; left: 40px; top: 20px; }
+.rp3{ width: 62px; height: 47px; left: 42px; top: 52px; }
+.rp4{ width: 55px; height: 43px; left: 17px; top: 54px; }
+
+.rose-center{
+    position: absolute;
+    left: 47px; top: 43px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 28%, #ffe3ec, #c8496f);
+    border: 5px solid #a83a63;
+    z-index: 20;
+    transform: scale(0);
+}
+.rose-head.open .rose-center{ animation: centerAppear .65s .55s cubic-bezier(.16,1,.3,1) forwards; }
+
+/* =========================================================
+   DAISY x4 — gathered lowest, inside the wrap
+========================================================= */
+.daisy{ position: absolute; width: 126px; height: 190px; top: 380px; transform-style: preserve-3d; }
+.daisy.d1{ left: 2%; }
+.daisy.d2{ left: 28%; }
+.daisy.d3{ left: 54%; }
+.daisy.d4{ left: 80%; }
+.daisy .stem{ height: 120px; }
+
+.daisy-head{
+    position: absolute;
+    width: 105px; height: 105px;
+    left: 10px; top: 0;
+    transform: scale(.1);
+    opacity: 0;
+    transform-style: preserve-3d;
+}
+.daisy-head.open{ animation: daisyBloom 1.1s cubic-bezier(.16,1,.3,1) forwards; }
+@keyframes daisyBloom{
+    from { opacity: 0; transform: scale(.1); }
+    65%  { opacity: 1; transform: scale(1.1); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.daisy-petal{
+    position: absolute;
+    left: 38px; top: 2px;
+    width: 29px; height: 55px;
+    border-radius: 60% 60% 50% 50%;
+    background: linear-gradient(100deg,#dcd9cf,#ffffff 42%,#f4f2eb 60%,#e5e2d8);
+    transform-origin: 50% 100%;
+    transform: rotate(var(--angle)) rotateX(16deg) scaleY(.05);
+    opacity: 0;
+    box-shadow:
+        inset 3px 0 3px rgba(255,255,255,.6),
+        2px 4px 5px rgba(90,80,70,.16);
+}
+.daisy-head.open .daisy-petal{
+    animation: daisyPetal .9s cubic-bezier(.16,1,.3,1) forwards;
+    animation-delay: calc(var(--i) * 50ms);
+}
+@keyframes daisyPetal{
+    from { opacity: 0; transform: rotate(var(--angle)) rotateX(16deg) scaleY(.05); }
+    65%  { opacity: 1; transform: rotate(var(--angle)) rotateX(16deg) scaleY(1.1); }
+    to   { opacity: 1; transform: rotate(var(--angle)) rotateX(16deg) scaleY(1); }
+}
+
+.daisy-center{
+    position: absolute;
+    left: 33px; top: 33px;
+    width: 39px; height: 39px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 26%, #fff5b0, #ffc91d 55%, #c98600 100%);
+    box-shadow:
+        inset 3px 3px 4px rgba(255,255,255,.4),
+        inset -4px -6px 7px rgba(140,90,0,.28);
+    z-index: 20;
+    transform: scale(0);
+}
+.daisy-head.open .daisy-center{ animation: centerAppear .7s .55s cubic-bezier(.16,1,.3,1) forwards; }
+
+/* =========================================================
+   RIBBON
+========================================================= */
+.ribbon{
+    position: absolute;
+    z-index: 16;
+    left: 50%; bottom: 46px;
+    width: 260px; height: 108px;
+    transform: translateX(-50%) scale(0);
+    opacity: 0;
+}
+.ribbon.show{ animation: ribbonAppear 1s cubic-bezier(.16,1,.3,1) forwards; }
+@keyframes ribbonAppear{
+    from { opacity: 0; transform: translateX(-50%) scale(0); }
+    70%  { opacity: 1; transform: translateX(-50%) scale(1.06); }
+    to   { opacity: 1; transform: translateX(-50%) scale(1); }
+}
+.ribbon-left, .ribbon-right{
+    position: absolute; top: 16px;
+    width: 108px; height: 64px;
+    background: linear-gradient(145deg,#e7cf9f,#a8824f);
+    box-shadow: 3px 6px 9px rgba(80,60,30,.25);
+}
+.ribbon-left{ right: 50%; border-radius: 15px 5px 45px 10px; transform: rotate(12deg); }
+.ribbon-right{ left: 50%; border-radius: 5px 15px 10px 45px; transform: rotate(-12deg); }
+.ribbon-center{
+    position: absolute; left: 50%; top: 30px;
+    width: 50px; height: 50px;
+    transform: translateX(-50%);
+    border-radius: 10px;
+    background: linear-gradient(145deg,#e2c592,#9c7c4c);
+    box-shadow: 0 5px 10px rgba(70,50,20,.25);
+}
+.ribbon-tail{
+    position: absolute; top: 60px;
+    width: 68px; height: 84px;
+    background: linear-gradient(145deg,#d8bf8d,#9a7d51);
+    clip-path: polygon(0 0,100% 0,76% 100%,48% 78%,20% 100%);
+}
+.ribbon-tail.left{ left: 62px; transform: rotate(8deg); }
+.ribbon-tail.right{ right: 62px; transform: scaleX(-1) rotate(8deg); }
+
+/* =========================================================
+   SPARKLES
+========================================================= */
+.sparkle{
+    position: absolute; z-index: 55;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff8ec, #ffd98f);
+    box-shadow: 0 0 14px rgba(255,214,150,.9);
+    opacity: 0;
+}
+.sparkle.active{ animation: sparkleFloat 2.5s ease forwards; }
+@keyframes sparkleFloat{
+    0%   { opacity: 0; transform: translateY(20px) scale(.2); }
+    30%  { opacity: 1; transform: translateY(0) scale(1.3); }
+    100% { opacity: 0; transform: translateY(-45px) scale(.2); }
+}
+
+/* =========================================================
+   CONTROLS
+========================================================= */
+.controls{
+    position: fixed; z-index: 100;
+    left: 50%; bottom: 22px;
+    transform: translateX(-50%);
+    display: flex; gap: 12px; align-items: center;
+}
+button{
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 15px;
+    letter-spacing: .3px;
+    cursor: pointer;
+    transition: .25s ease;
+}
+#bloomButton{
+    background: linear-gradient(135deg,#cf5c85,#a83e68);
+    color: white;
+    box-shadow: 0 12px 26px rgba(140,50,80,.3);
+}
+#bloomButton:hover{ transform: translateY(-3px); box-shadow: 0 16px 32px rgba(140,50,80,.36); }
+
+#meaningButton{
+    background: rgba(255,255,255,.85);
+    color: var(--ink);
+    border: 1px solid rgba(199,154,92,.5);
+    box-shadow: 0 10px 22px rgba(120,50,70,.14);
+}
+#meaningButton:hover{ transform: translateY(-3px); background: #fff; }
+
+/* =========================================================
+   MEANING MODAL
+========================================================= */
+.overlay{
+    position: fixed; inset: 0;
+    z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    background: rgba(60,20,35,.42);
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .35s ease;
+}
+.overlay.show{ opacity: 1; pointer-events: auto; }
+
+.modal-card{
+    position: relative;
+    width: min(92vw, 460px);
+    max-height: 82vh;
+    overflow-y: auto;
+    background: linear-gradient(160deg, #fffaf4, #fdf1ea);
+    border: 1px solid rgba(199,154,92,.4);
+    border-radius: 22px;
+    padding: 38px 32px 32px;
+    box-shadow: 0 30px 60px rgba(90,20,45,.35);
+    text-align: center;
+    transform: scale(.9) translateY(14px);
+    opacity: 0;
+    transition: transform .4s cubic-bezier(.16,1,.3,1), opacity .35s ease;
+}
+.overlay.show .modal-card{ transform: scale(1) translateY(0); opacity: 1; }
+
+.modal-emoji{ font-size: 40px; margin-bottom: 6px; }
+.modal-title{
+    font-family: "Playfair Display", Georgia, serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--ink);
+    margin: 0 0 14px;
+    line-height: 1.35;
+}
+.modal-body{
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin: 0;
+    text-align: left;
+}
+.modal-body p{ margin: 0 0 14px; }
+.modal-body p:last-child{ margin-bottom: 0; }
+
+.modal-close{
+    position: absolute;
+    top: 14px; right: 16px;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(199,154,92,.18);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+}
+.modal-close:hover{ background: rgba(199,154,92,.32); }
+
+/* =========================================================
+   MUSIC TOGGLE
+========================================================= */
+.music-toggle{
+    position: fixed;
+    z-index: 100;
+    top: 18px; right: 18px;
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    border: 1px solid rgba(199,154,92,.5);
+    background: rgba(255,255,255,.85);
+    color: var(--ink);
+    font-size: 19px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 10px 22px rgba(120,50,70,.16);
+    transition: .25s ease;
+}
+.music-toggle:hover{ transform: translateY(-2px); background: #fff; }
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 640px){
+    .bouquet{ transform: scale(.72); transform-origin: top center; margin-top: 20px; }
+    .controls{ flex-direction: column; gap: 8px; bottom: 16px; }
+    button{ padding: 12px 24px; font-size: 13px; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="scene">
+
+    <div class="glow"></div>
+    <div class="bokeh-layer" id="bokehLayer"></div>
+
+    <div class="hint-text" id="hintText">Sentuh setiap bunga untuk mengungkap maknanya 🌸</div>
+
+    <div class="bouquet">
+
+        <div class="paper-back" id="paperBack"></div>
+
+        <div class="flowers">
+
+            <!-- SUNFLOWER TOP -->
+            <div class="sunflower top" data-meaning="sun">
+                <div class="stem"></div>
+                <div class="leaf" style="left:8px;bottom:100px;transform:rotate(-35deg);"></div>
+                <div class="leaf" style="right:-6px;bottom:135px;transform:scaleX(-1) rotate(-30deg);"></div>
+                <div class="sun-head" id="sunTop">
+                    <div class="sun-petal" style="--angle:0deg;--i:0"></div>
+                    <div class="sun-petal" style="--angle:30deg;--i:1"></div>
+                    <div class="sun-petal" style="--angle:60deg;--i:2"></div>
+                    <div class="sun-petal" style="--angle:90deg;--i:3"></div>
+                    <div class="sun-petal" style="--angle:120deg;--i:4"></div>
+                    <div class="sun-petal" style="--angle:150deg;--i:5"></div>
+                    <div class="sun-petal" style="--angle:180deg;--i:6"></div>
+                    <div class="sun-petal" style="--angle:210deg;--i:7"></div>
+                    <div class="sun-petal" style="--angle:240deg;--i:8"></div>
+                    <div class="sun-petal" style="--angle:270deg;--i:9"></div>
+                    <div class="sun-petal" style="--angle:300deg;--i:10"></div>
+                    <div class="sun-petal" style="--angle:330deg;--i:11"></div>
+                    <div class="sun-center"></div>
+                </div>
+            </div>
+
+            <!-- SUNFLOWER LEFT -->
+            <div class="sunflower left" data-meaning="sun">
+                <div class="stem"></div>
+                <div class="leaf" style="left:8px;bottom:75px;"></div>
+                <div class="sun-head" id="sunLeft">
+                    <div class="sun-petal" style="--angle:0deg;--i:0"></div>
+                    <div class="sun-petal" style="--angle:30deg;--i:1"></div>
+                    <div class="sun-petal" style="--angle:60deg;--i:2"></div>
+                    <div class="sun-petal" style="--angle:90deg;--i:3"></div>
+                    <div class="sun-petal" style="--angle:120deg;--i:4"></div>
+                    <div class="sun-petal" style="--angle:150deg;--i:5"></div>
+                    <div class="sun-petal" style="--angle:180deg;--i:6"></div>
+                    <div class="sun-petal" style="--angle:210deg;--i:7"></div>
+                    <div class="sun-petal" style="--angle:240deg;--i:8"></div>
+                    <div class="sun-petal" style="--angle:270deg;--i:9"></div>
+                    <div class="sun-petal" style="--angle:300deg;--i:10"></div>
+                    <div class="sun-petal" style="--angle:330deg;--i:11"></div>
+                    <div class="sun-center"></div>
+                </div>
+            </div>
+
+            <!-- SUNFLOWER RIGHT -->
+            <div class="sunflower right" data-meaning="sun">
+                <div class="stem"></div>
+                <div class="leaf" style="right:0;bottom:80px;transform:scaleX(-1) rotate(-30deg);"></div>
+                <div class="sun-head" id="sunRight">
+                    <div class="sun-petal" style="--angle:0deg;--i:0"></div>
+                    <div class="sun-petal" style="--angle:30deg;--i:1"></div>
+                    <div class="sun-petal" style="--angle:60deg;--i:2"></div>
+                    <div class="sun-petal" style="--angle:90deg;--i:3"></div>
+                    <div class="sun-petal" style="--angle:120deg;--i:4"></div>
+                    <div class="sun-petal" style="--angle:150deg;--i:5"></div>
+                    <div class="sun-petal" style="--angle:180deg;--i:6"></div>
+                    <div class="sun-petal" style="--angle:210deg;--i:7"></div>
+                    <div class="sun-petal" style="--angle:240deg;--i:8"></div>
+                    <div class="sun-petal" style="--angle:270deg;--i:9"></div>
+                    <div class="sun-petal" style="--angle:300deg;--i:10"></div>
+                    <div class="sun-petal" style="--angle:330deg;--i:11"></div>
+                    <div class="sun-center"></div>
+                </div>
+            </div>
+
+            <!-- CARNATION (pinched by roses) -->
+            <div class="carnation" data-meaning="carn">
+                <div class="stem"></div>
+                <div class="leaf" style="left:0;bottom:60px;"></div>
+                <div class="leaf" style="right:-2px;bottom:90px;transform:scaleX(-1) rotate(-30deg);"></div>
+                <div class="carnation-head" id="carnation">
+                    <div class="carnation-layer" style="--size:160px;--layer:0;"></div>
+                    <div class="carnation-layer" style="--size:135px;--layer:1;"></div>
+                    <div class="carnation-layer" style="--size:108px;--layer:2;"></div>
+                    <div class="carnation-layer" style="--size:82px;--layer:3;"></div>
+                </div>
+            </div>
+
+            <!-- ROSE LEFT -->
+            <div class="rose left" data-meaning="rose">
+                <div class="stem"></div>
+                <div class="leaf" style="left:0;bottom:48px;"></div>
+                <div class="rose-head" id="roseLeft">
+                    <div class="rose-outer"></div>
+                    <div class="rose-petal rp1"></div>
+                    <div class="rose-petal rp2"></div>
+                    <div class="rose-petal rp3"></div>
+                    <div class="rose-petal rp4"></div>
+                    <div class="rose-center"></div>
+                </div>
+            </div>
+
+            <!-- ROSE RIGHT -->
+            <div class="rose right" data-meaning="rose">
+                <div class="stem"></div>
+                <div class="leaf" style="right:0;bottom:52px;transform:scaleX(-1) rotate(-30deg);"></div>
+                <div class="rose-head" id="roseRight">
+                    <div class="rose-outer"></div>
+                    <div class="rose-petal rp1"></div>
+                    <div class="rose-petal rp2"></div>
+                    <div class="rose-petal rp3"></div>
+                    <div class="rose-petal rp4"></div>
+                    <div class="rose-center"></div>
+                </div>
+            </div>
+
+            <!-- DAISY x4 -->
+            <div class="daisy d1" data-meaning="daisy">
+                <div class="stem"></div>
+                <div class="daisy-head" id="daisy1">
+                    <div class="daisy-petal" style="--angle:0deg;--i:0"></div>
+                    <div class="daisy-petal" style="--angle:45deg;--i:1"></div>
+                    <div class="daisy-petal" style="--angle:90deg;--i:2"></div>
+                    <div class="daisy-petal" style="--angle:135deg;--i:3"></div>
+                    <div class="daisy-petal" style="--angle:180deg;--i:4"></div>
+                    <div class="daisy-petal" style="--angle:225deg;--i:5"></div>
+                    <div class="daisy-petal" style="--angle:270deg;--i:6"></div>
+                    <div class="daisy-petal" style="--angle:315deg;--i:7"></div>
+                    <div class="daisy-center"></div>
+                </div>
+            </div>
+
+            <div class="daisy d2" data-meaning="daisy">
+                <div class="stem"></div>
+                <div class="daisy-head" id="daisy2">
+                    <div class="daisy-petal" style="--angle:0deg;--i:0"></div>
+                    <div class="daisy-petal" style="--angle:45deg;--i:1"></div>
+                    <div class="daisy-petal" style="--angle:90deg;--i:2"></div>
+                    <div class="daisy-petal" style="--angle:135deg;--i:3"></div>
+                    <div class="daisy-petal" style="--angle:180deg;--i:4"></div>
+                    <div class="daisy-petal" style="--angle:225deg;--i:5"></div>
+                    <div class="daisy-petal" style="--angle:270deg;--i:6"></div>
+                    <div class="daisy-petal" style="--angle:315deg;--i:7"></div>
+                    <div class="daisy-center"></div>
+                </div>
+            </div>
+
+            <div class="daisy d3" data-meaning="daisy">
+                <div class="stem"></div>
+                <div class="daisy-head" id="daisy3">
+                    <div class="daisy-petal" style="--angle:0deg;--i:0"></div>
+                    <div class="daisy-petal" style="--angle:45deg;--i:1"></div>
+                    <div class="daisy-petal" style="--angle:90deg;--i:2"></div>
+                    <div class="daisy-petal" style="--angle:135deg;--i:3"></div>
+                    <div class="daisy-petal" style="--angle:180deg;--i:4"></div>
+                    <div class="daisy-petal" style="--angle:225deg;--i:5"></div>
+                    <div class="daisy-petal" style="--angle:270deg;--i:6"></div>
+                    <div class="daisy-petal" style="--angle:315deg;--i:7"></div>
+                    <div class="daisy-center"></div>
+                </div>
+            </div>
+
+            <div class="daisy d4" data-meaning="daisy">
+                <div class="stem"></div>
+                <div class="daisy-head" id="daisy4">
+                    <div class="daisy-petal" style="--angle:0deg;--i:0"></div>
+                    <div class="daisy-petal" style="--angle:45deg;--i:1"></div>
+                    <div class="daisy-petal" style="--angle:90deg;--i:2"></div>
+                    <div class="daisy-petal" style="--angle:135deg;--i:3"></div>
+                    <div class="daisy-petal" style="--angle:180deg;--i:4"></div>
+                    <div class="daisy-petal" style="--angle:225deg;--i:5"></div>
+                    <div class="daisy-petal" style="--angle:270deg;--i:6"></div>
+                    <div class="daisy-petal" style="--angle:315deg;--i:7"></div>
+                    <div class="daisy-center"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="paper-front" id="paperFront"></div>
+
+        <div class="ribbon" id="ribbon">
+            <div class="ribbon-left"></div>
+            <div class="ribbon-right"></div>
+            <div class="ribbon-tail left"></div>
+            <div class="ribbon-tail right"></div>
+            <div class="ribbon-center"></div>
+        </div>
+
+        <div class="sparkle" style="left:20%;top:12%"></div>
+        <div class="sparkle" style="left:78%;top:16%"></div>
+        <div class="sparkle" style="left:32%;top:30%"></div>
+        <div class="sparkle" style="left:68%;top:34%"></div>
+        <div class="sparkle" style="left:50%;top:8%"></div>
+        <div class="sparkle" style="left:12%;top:45%"></div>
+        <div class="sparkle" style="left:88%;top:42%"></div>
+        <div class="sparkle" style="left:24%;top:58%"></div>
+        <div class="sparkle" style="left:76%;top:60%"></div>
+
+    </div>
+
+    <div class="controls">
+        <button id="bloomButton">🌱 Mulai Blooming</button>
+        <button id="meaningButton">🌷 Makna Buket</button>
+    </div>
+
+</div>
+
+<div class="overlay" id="overlay">
+    <div class="modal-card">
+        <button class="modal-close" id="modalClose">✕</button>
+        <div class="modal-emoji" id="modalEmoji">🌷</div>
+        <h3 class="modal-title" id="modalTitle"></h3>
+        <div class="modal-body" id="modalBody"></div>
+    </div>
+</div>
+
+<!-- =========================================================
+     BACKGROUND MUSIC
+     Buat folder "music" di lokasi yang sama dengan file HTML
+     ini, lalu taruh file mp3 kamu di sana. Ganti nama file di
+     bawah ("bgMusic.mp3") sesuai nama file mp3-mu.
+     Contoh struktur folder:
+       blooming-bouquet.html
+       music/
+         bgMusic.mp3
+========================================================= -->
+<audio id="bgMusic" loop preload="auto">
+    <source src="bgMusic.mp3" type="audio/mpeg">
+    Browser kamu tidak mendukung elemen audio.
+</audio>
+
+<button class="music-toggle" id="musicToggle" title="Putar / jeda musik">🔈</button>
+
+<script>
+
+/* =========================================================
+   MEANINGS (hanakotoba)
+========================================================= */
+const meanings = {
+    sun: {
+        emoji: "🌻",
+        title: "Bunga Matahari (Himawari)",
+        body: [
+            "Melambangkan kekaguman, loyalitas, dan pesan emosional “aku hanya melihatmu” (I only have eyes for you).",
+            "Tiga tangkai menguatkan pernyataan cinta dan fokus yang tidak terbagi pada satu orang."
+        ]
+    },
+    carn: {
+        emoji: "🌸",
+        title: "Karnelion Merah Muda (Pinku no Kaneshon)",
+        body: [
+            "Mewakili cinta yang abadi dan pesan “aku tidak akan pernah melupakanmu”.",
+            "Bunga ini menambahkan lapisan rasa syukur, kelembutan, dan kasih sayang yang hangat."
+        ]
+    },
+    rose: {
+        emoji: "🌹",
+        title: "Mawar Merah Muda (Pinku no Bara)",
+        body: [
+            "Membawa makna keanggunan, rasa percaya (trust), dan kebahagiaan.",
+            "Dalam asmara, mawar merah muda menyatakan janji cinta yang lembut dan rasa syukur memiliki pasangan tersebut, bukan sekadar gairah sesaat."
+        ]
+    },
+    daisy: {
+        emoji: "🌼",
+        title: "Daisy Putih (Shiroi Hinagiku)",
+        body: [
+            "Melambangkan kemurnian, kepolosan, dan cinta yang setia, mengikat seluruh buket dengan kesan ketulusan tanpa pamrih."
+        ]
+    },
+    all: {
+        emoji: "🌷",
+        title: "Makna Buket Ini (Hanakotoba)",
+        body: [
+            "Dalam hanakotoba (bahasa bunga Jepang), komposisi buket ini merangkai pesan tentang cinta yang murni, pengabdian tak tergoyahkan, dan apresiasi yang mendalam.",
+            "🌻 Bunga Matahari — kekaguman, loyalitas, dan “aku hanya melihatmu”. Tiga tangkai menegaskan fokus cinta yang tidak terbagi.",
+            "🌸 Karnelion Merah Muda — cinta abadi, “aku tidak akan pernah melupakanmu”, rasa syukur dan kasih yang hangat.",
+            "🌹 Mawar Merah Muda — keanggunan, kepercayaan, dan kebahagiaan; janji cinta yang lembut.",
+            "🌼 Daisy Putih — kemurnian, kepolosan, dan cinta yang setia, mengikat seluruh buket dengan ketulusan."
+        ]
+    }
+};
+
+const overlay     = document.getElementById("overlay");
+const modalEmoji  = document.getElementById("modalEmoji");
+const modalTitle  = document.getElementById("modalTitle");
+const modalBody   = document.getElementById("modalBody");
+const modalClose  = document.getElementById("modalClose");
+
+function openMeaning(key){
+    const m = meanings[key];
+    if(!m) return;
+    modalEmoji.textContent = m.emoji;
+    modalTitle.textContent = m.title;
+    modalBody.innerHTML = m.body.map(p => "<p>" + p + "</p>").join("");
+    overlay.classList.add("show");
+}
+function closeMeaning(){ overlay.classList.remove("show"); }
+
+document.querySelectorAll("[data-meaning]").forEach(el => {
+    el.addEventListener("click", () => openMeaning(el.getAttribute("data-meaning")));
+});
+document.getElementById("meaningButton").addEventListener("click", () => openMeaning("all"));
+modalClose.addEventListener("click", closeMeaning);
+overlay.addEventListener("click", (e) => { if(e.target === overlay) closeMeaning(); });
+document.addEventListener("keydown", (e) => { if(e.key === "Escape") closeMeaning(); });
+
+/* =========================================================
+   AMBIENT BOKEH
+========================================================= */
+(function createBokeh(){
+    const layer = document.getElementById("bokehLayer");
+    for(let i=0;i<10;i++){
+        const b = document.createElement("div");
+        b.className = "bokeh";
+        const size = 6 + Math.random()*14;
+        b.style.width = size+"px";
+        b.style.height = size+"px";
+        b.style.left = (Math.random()*100)+"%";
+        b.style.top = (58 + Math.random()*35)+"%";
+        b.style.animationDuration = (9 + Math.random()*9)+"s";
+        b.style.animationDelay = (Math.random()*8)+"s";
+        layer.appendChild(b);
+    }
+})();
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+const button    = document.getElementById("bloomButton");
+const paperBack  = document.getElementById("paperBack");
+const paperFront = document.getElementById("paperFront");
+const ribbon     = document.getElementById("ribbon");
+const hintText   = document.getElementById("hintText");
+
+const sunTop    = document.getElementById("sunTop");
+const sunLeft   = document.getElementById("sunLeft");
+const sunRight  = document.getElementById("sunRight");
+const carnation = document.getElementById("carnation");
+const roseLeft  = document.getElementById("roseLeft");
+const roseRight = document.getElementById("roseRight");
+const daisy1 = document.getElementById("daisy1");
+const daisy2 = document.getElementById("daisy2");
+const daisy3 = document.getElementById("daisy3");
+const daisy4 = document.getElementById("daisy4");
+
+const stems    = document.querySelectorAll(".stem");
+const leaves   = document.querySelectorAll(".leaf");
+const sparkles = document.querySelectorAll(".sparkle");
+
+/* =========================================================
+   BACKGROUND MUSIC
+========================================================= */
+const bgMusic     = document.getElementById("bgMusic");
+const musicToggle = document.getElementById("musicToggle");
+
+function updateMusicIcon(){
+    musicToggle.textContent = bgMusic.paused ? "🔈" : "🔊";
+}
+function tryPlayMusic(){
+    bgMusic.play().then(updateMusicIcon).catch(() => { /* diblokir browser sampai ada interaksi user */ });
+}
+musicToggle.addEventListener("click", () => {
+    if(bgMusic.paused){ tryPlayMusic(); } else { bgMusic.pause(); updateMusicIcon(); }
+});
+
+/* =========================================================
+   RESET
+========================================================= */
+function resetBloom(){
+    paperBack.style.opacity = "0";
+    paperBack.style.transform = "translateX(-50%) scaleY(0)";
+    paperFront.style.opacity = "0";
+    paperFront.style.transform = "translateX(-50%) scaleY(0)";
+
+    ribbon.classList.remove("show");
+    hintText.classList.remove("show");
+
+    stems.forEach(s => s.classList.remove("grow-stem"));
+    leaves.forEach(l => l.classList.remove("show"));
+
+    document.querySelectorAll(".sun-head, .carnation-head, .rose-head, .daisy-head")
+        .forEach(h => h.classList.remove("open"));
+
+    sparkles.forEach(s => s.classList.remove("active"));
+}
+
+/* =========================================================
+   BLOOM SEQUENCE
+========================================================= */
+function startBloom(){
+
+    resetBloom();
+    button.innerHTML = "🌱 Bunga sedang tumbuh...";
+    tryPlayMusic();
+
+    setTimeout(() => {
+        paperBack.style.transition = "opacity 1.5s ease, transform 1.8s cubic-bezier(.16,1,.3,1)";
+        paperBack.style.opacity = "1";
+        paperBack.style.transform = "translateX(-50%) scaleY(1)";
+    }, 200);
+
+    setTimeout(() => {
+        stems.forEach((stem, i) => setTimeout(() => stem.classList.add("grow-stem"), i*120));
+    }, 500);
+
+    setTimeout(() => {
+        leaves.forEach((leaf, i) => setTimeout(() => leaf.classList.add("show"), i*130));
+    }, 1400);
+
+    setTimeout(() => sunTop.classList.add("open"),   2200);
+    setTimeout(() => sunLeft.classList.add("open"),  2450);
+    setTimeout(() => sunRight.classList.add("open"), 2600);
+
+    setTimeout(() => carnation.classList.add("open"), 3100);
+
+    setTimeout(() => roseLeft.classList.add("open"),  3500);
+    setTimeout(() => roseRight.classList.add("open"), 3650);
+
+    setTimeout(() => daisy1.classList.add("open"), 4050);
+    setTimeout(() => daisy2.classList.add("open"), 4200);
+    setTimeout(() => daisy3.classList.add("open"), 4350);
+    setTimeout(() => daisy4.classList.add("open"), 4500);
+
+    setTimeout(() => {
+        paperFront.style.transition = "opacity 1.3s ease, transform 1.5s cubic-bezier(.16,1,.3,1)";
+        paperFront.style.opacity = "1";
+        paperFront.style.transform = "translateX(-50%) scaleY(1)";
+    }, 4900);
+
+    setTimeout(() => ribbon.classList.add("show"), 5300);
+
+    setTimeout(() => {
+        sparkles.forEach((sp, i) => setTimeout(() => sp.classList.add("active"), i*180));
+    }, 5900);
+
+    setTimeout(() => hintText.classList.add("show"), 6400);
+
+    setTimeout(() => { button.innerHTML = "🌸 Bloom Lagi"; }, 7400);
+}
+
+button.addEventListener("click", startBloom);
+setTimeout(startBloom, 900);
+
+</script>
+
+</body>
+</html>
