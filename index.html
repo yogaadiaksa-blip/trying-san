@@ -102,11 +102,16 @@ body{
 /* =========================================================
    BOUQUET CONTAINER
 ========================================================= */
-.bouquet{
+.bouquet-stage{
     position: relative;
-    width: min(94vw, 740px);
-    height: 900px;
-    margin-top: 46px;
+    margin-top: 50px;
+}
+.bouquet{
+    position: absolute;
+    top: 0; left: 0;
+    width: 1000px;
+    height: 1220px;
+    transform-origin: top left;
     perspective: 1300px;
 }
 
@@ -116,17 +121,17 @@ body{
 ========================================================= */
 .paper-back{
     position: absolute;
-    left: 50%; bottom: 20px;
+    left: 50%; bottom: 27px;
     transform: translateX(-50%) scaleY(0);
     transform-origin: bottom center;
-    width: 660px; height: 820px;
+    width: 940px; height: 1150px;
     background:
         linear-gradient(160deg, #fff6f0 0%, #f9dbe2 22%, #f0b8c8 48%, #e39fb5 70%, #f3c9d4 88%, #fff6f0 100%);
-    clip-path: polygon(12% 0%, 88% 0%, 100% 40%, 64% 100%, 36% 100%, 0% 40%);
+    clip-path: polygon(10% 0%, 90% 0%, 100% 40%, 64% 100%, 36% 100%, 0% 40%);
     opacity: 0;
     z-index: 1;
     box-shadow: inset 0 0 0 2px rgba(255,255,255,.55);
-    filter: drop-shadow(0 26px 34px rgba(120,50,70,.28));
+    filter: drop-shadow(0 32px 42px rgba(120,50,70,.28));
 }
 .paper-back::before{
     content: "";
@@ -144,15 +149,15 @@ body{
 .paper-front{
     position: absolute;
     z-index: 15;
-    left: 50%; bottom: 10px;
+    left: 50%; bottom: 14px;
     transform: translateX(-50%) scaleY(0);
     transform-origin: bottom center;
-    width: 460px; height: 560px;
+    width: 660px; height: 800px;
     background:
         linear-gradient(160deg, #fffaf5 0%, #fbe6ea 20%, #f3c3d0 50%, #fbe6ea 80%, #fffaf5 100%);
-    clip-path: polygon(10% 0%, 90% 0%, 100% 42%, 62% 100%, 38% 100%, 0% 42%);
+    clip-path: polygon(8% 0%, 92% 0%, 100% 42%, 62% 100%, 38% 100%, 0% 42%);
     opacity: 0;
-    filter: drop-shadow(0 18px 24px rgba(140,50,80,.28));
+    filter: drop-shadow(0 22px 30px rgba(140,50,80,.28));
 }
 .paper-front::before{
     content: "";
@@ -188,7 +193,7 @@ body{
 .stem{
     position: absolute;
     bottom: 0; left: 50%;
-    width: 11px; height: 0;
+    width: 15px; height: 0;
     transform: translateX(-50%) scaleY(0);
     transform-origin: bottom center;
     border-radius: 20px;
@@ -207,7 +212,7 @@ body{
 ========================================================= */
 .leaf{
     position: absolute;
-    width: 100px; height: 46px;
+    width: 135px; height: 62px;
     border-radius: 100% 0 100% 0;
     background: linear-gradient(135deg,#5cc061 0%,#2e8b3b 45%,#12481f 100%);
     opacity: 0;
@@ -218,7 +223,7 @@ body{
 .leaf::after{
     content: "";
     position: absolute;
-    width: 75px; height: 2px;
+    width: 101px; height: 2px;
     top: 50%; left: 8px;
     transform: rotate(-7deg);
     background: rgba(255,255,255,.25);
@@ -240,37 +245,39 @@ body{
 /* =========================================================
    SUNFLOWER  — triangle: 1 top, 2 below, rising above the wrap
 ========================================================= */
-.sunflower{ position: absolute; width: 186px; height: 330px; transform-style: preserve-3d; }
-.sunflower.top   { left: 50%; top: 0px;  transform: translateX(-50%); }
-.sunflower.left  { left: 0%;  top: 62px; }
-.sunflower.right { right: 0%; top: 62px; }
-.sunflower .stem{ height: 190px; }
+.sunflower{ position: absolute; width: 252px; left: 50%; transform-style: preserve-3d; }
+.sunflower.top   { height: 1085px; top: 0px;   transform: translateX(-50%) rotate(0deg);   transform-origin: 50% 100%; }
+.sunflower.left  { height: 1001px; top: 84px;  transform: translateX(-50%) rotate(-20deg); transform-origin: 50% 100%; }
+.sunflower.right { height: 1001px; top: 84px;  transform: translateX(-50%) rotate(20deg);  transform-origin: 50% 100%; }
+.sunflower.top .stem{ height: 896px; }
+.sunflower.left .stem, .sunflower.right .stem{ height: 812px; }
 
 .sun-head{
     position: absolute;
-    width: 168px; height: 168px;
-    left: 9px; top: 0;
+    width: 227px; height: 227px;
+    left: 12px; top: 0;
     border-radius: 50%;
-    transform: scale(.18);
+    transform: scale(.14);
     transform-origin: center bottom;
     opacity: 0;
     transform-style: preserve-3d;
 }
-.sun-head.open{ animation: sunflowerHead 1s cubic-bezier(.16,1,.3,1) forwards; }
+.sun-head.open{ animation: sunflowerHead 1.3s cubic-bezier(.16,1,.3,1) forwards; }
 @keyframes sunflowerHead{
-    0%   { opacity: 0; transform: scale(.15); }
-    60%  { opacity: 1; transform: scale(1.08); }
+    0%   { opacity: 0; transform: scale(.12); }
+    45%  { opacity: 1; transform: scale(.42); }
+    75%  { opacity: 1; transform: scale(1.1); }
     100% { opacity: 1; transform: scale(1); }
 }
 
 .sun-petal{
     position: absolute;
-    width: 36px; height: 88px;
-    left: 66px; top: 0px;
+    width: 49px; height: 119px;
+    left: 89px; top: 0px;
     border-radius: 55% 55% 48% 48%;
     background: linear-gradient(100deg,#c98600 0%,#ffc928 28%,#fff0a3 48%,#ffdc4c 58%,#e7a400 100%);
     transform-origin: 50% 100%;
-    transform: rotate(var(--angle)) rotateX(18deg) scaleY(.05);
+    transform: rotate(calc(var(--angle) * .1)) rotateX(18deg) scaleY(.12);
     opacity: 0;
     box-shadow:
         inset 4px 0 5px rgba(255,255,255,.4),
@@ -286,22 +293,24 @@ body{
     background: radial-gradient(ellipse, rgba(255,255,255,.55), rgba(255,255,255,0) 70%);
 }
 .sun-head.open .sun-petal{
-    animation: petalOpen 1.15s cubic-bezier(.16,1,.3,1) forwards;
-    animation-delay: calc(var(--i) * 45ms);
+    animation: petalOpen 1.3s cubic-bezier(.16,1,.3,1) forwards;
+    animation-delay: calc(var(--i) * 50ms);
 }
 @keyframes petalOpen{
-    0%   { opacity: 0; transform: rotate(var(--angle)) rotateX(18deg) scaleY(.05); }
-    50%  { opacity: 1; transform: rotate(var(--angle)) rotateX(18deg) scaleY(1.08); }
-    100% { opacity: 1; transform: rotate(var(--angle)) rotateX(18deg) scaleY(1); }
+    0%   { opacity: 0;  transform: rotate(calc(var(--angle) * .1))  rotateX(18deg) scaleY(.12); }
+    35%  { opacity: .5; transform: rotate(calc(var(--angle) * .3))  rotateX(18deg) scaleY(.3); }
+    65%  { opacity: 1;  transform: rotate(calc(var(--angle) * .8))  rotateX(18deg) scaleY(.85); }
+    85%  { opacity: 1;  transform: rotate(var(--angle)) rotateX(18deg) scaleY(1.1); }
+    100% { opacity: 1;  transform: rotate(var(--angle)) rotateX(18deg) scaleY(1); }
 }
 
 .sun-center{
     position: absolute;
-    left: 41px; top: 41px;
-    width: 86px; height: 86px;
+    left: 55px; top: 55px;
+    width: 116px; height: 116px;
     border-radius: 50%;
     background: radial-gradient(circle at 32% 26%, #8a5a3c 0%, #63361f 45%, #2c1409 100%);
-    border: 7px solid #855022;
+    border: 9px solid #855022;
     box-shadow:
         inset 5px 5px 6px rgba(255,255,255,.16),
         inset -8px -9px 12px rgba(0,0,0,.3),
@@ -309,7 +318,7 @@ body{
     z-index: 20;
     transform: scale(0);
 }
-.sun-head.open .sun-center{ animation: centerAppear .8s .65s cubic-bezier(.16,1,.3,1) forwards; }
+.sun-head.open .sun-center{ animation: centerAppear .8s .78s cubic-bezier(.16,1,.3,1) forwards; }
 @keyframes centerAppear{
     from { transform: scale(0); }
     70%  { transform: scale(1.08); }
@@ -317,10 +326,10 @@ body{
 }
 .sun-center::before{
     content: "";
-    position: absolute; inset: 11px;
+    position: absolute; inset: 15px;
     border-radius: 50%;
-    background: radial-gradient(circle, #1c0d08 2px, transparent 3px);
-    background-size: 13px 13px;
+    background: radial-gradient(circle, #1c0d08 3px, transparent 4px);
+    background-size: 17px 17px;
     opacity: .7;
 }
 .sun-center::after{
@@ -335,29 +344,30 @@ body{
 /* =========================================================
    CARNATION — gathered at the wrap's mouth
 ========================================================= */
-.carnation{ position: absolute; width: 200px; height: 260px; left: 50%; top: 232px; transform: translateX(-50%); transform-style: preserve-3d; }
-.carnation .stem{ height: 150px; }
+.carnation{ position: absolute; width: 270px; height: 772px; left: 50%; top: 313px; transform: translateX(-50%) rotate(0deg); transform-origin: 50% 100%; transform-style: preserve-3d; }
+.carnation .stem{ height: 624px; }
 
 .carnation-head{
     position: absolute;
-    left: 20px; top: 0;
-    width: 160px; height: 150px;
+    left: 27px; top: 0;
+    width: 216px; height: 203px;
     border-radius: 50%;
-    transform: scale(.15);
+    transform: scale(.12);
     opacity: 0;
     transform-style: preserve-3d;
 }
-.carnation-head.open{ animation: carnationBloom 1.4s cubic-bezier(.16,1,.3,1) forwards; }
+.carnation-head.open{ animation: carnationBloom 1.6s cubic-bezier(.16,1,.3,1) forwards; }
 @keyframes carnationBloom{
-    0%   { opacity: 0; transform: scale(.15); }
-    60%  { opacity: 1; transform: scale(1.08); }
+    0%   { opacity: 0; transform: scale(.1); }
+    40%  { opacity: 1; transform: scale(.4); }
+    70%  { opacity: 1; transform: scale(1.1); }
     100% { opacity: 1; transform: scale(1); }
 }
 
 .carnation-layer{
     position: absolute;
     left: 50%; top: 50%;
-    transform: translate(-50%,-50%) scale(.2);
+    transform: translate(-50%,-50%) scale(.15);
     width: var(--size); height: var(--size);
     border-radius: 50%;
     background: radial-gradient(circle at 35% 30%, #ffd3e2 0%, #f48fb1 48%, #c4477c 100%);
@@ -367,36 +377,38 @@ body{
     clip-path: polygon(50% 0%,56% 9%,64% 3%,69% 13%,78% 8%,82% 19%,92% 17%,91% 29%,100% 34%,92% 43%,98% 52%,88% 57%,94% 68%,82% 70%,84% 82%,72% 79%,68% 91%,58% 84%,50% 100%,43% 89%,32% 95%,29% 83%,17% 86%,19% 74%,7% 71%,12% 60%,2% 54%,10% 44%,1% 35%,11% 29%,8% 18%,20% 20%,23% 9%,34% 14%,42% 4%);
 }
 .carnation-head.open .carnation-layer{
-    animation: carnationLayer 1s cubic-bezier(.16,1,.3,1) forwards;
-    animation-delay: calc(var(--layer) * 150ms);
+    animation: carnationLayer 1.2s cubic-bezier(.16,1,.3,1) forwards;
+    animation-delay: calc(var(--layer) * 170ms);
 }
 @keyframes carnationLayer{
-    from { transform: translate(-50%,-50%) scale(.15) rotate(-15deg) rotateX(14deg); }
-    70%  { transform: translate(-50%,-50%) scale(1.06) rotate(5deg) rotateX(14deg); }
+    from { transform: translate(-50%,-50%) scale(.1) rotate(-30deg) rotateX(14deg); }
+    60%  { transform: translate(-50%,-50%) scale(.6) rotate(-10deg) rotateX(14deg); }
+    85%  { transform: translate(-50%,-50%) scale(1.08) rotate(5deg) rotateX(14deg); }
     to   { transform: translate(-50%,-50%) scale(1) rotate(0) rotateX(14deg); }
 }
 
 /* =========================================================
    ROSE — pinching the carnation on both sides
 ========================================================= */
-.rose{ position: absolute; width: 160px; height: 250px; top: 258px; transform-style: preserve-3d; }
-.rose.left{ left: 15%; }
-.rose.right{ right: 15%; }
-.rose .stem{ height: 150px; }
+.rose{ position: absolute; width: 216px; height: 737px; top: 348px; left: 50%; transform-style: preserve-3d; }
+.rose.left{ transform: translateX(-50%) rotate(-14deg); transform-origin: 50% 100%; }
+.rose.right{ transform: translateX(-50%) rotate(14deg); transform-origin: 50% 100%; }
+.rose .stem{ height: 602px; }
 
 .rose-head{
     position: absolute;
-    left: 22px; top: 0;
-    width: 120px; height: 120px;
+    left: 30px; top: 0;
+    width: 162px; height: 162px;
     border-radius: 50%;
-    transform: scale(.1);
+    transform: scale(.08);
     opacity: 0;
     transform-style: preserve-3d;
 }
-.rose-head.open{ animation: roseBloom 1.25s cubic-bezier(.16,1,.3,1) forwards; }
+.rose-head.open{ animation: roseBloom 1.5s cubic-bezier(.16,1,.3,1) forwards; }
 @keyframes roseBloom{
-    0%   { opacity: 0; transform: scale(.1) rotate(-20deg); }
-    65%  { opacity: 1; transform: scale(1.08) rotate(4deg); }
+    0%   { opacity: 0; transform: scale(.08) rotate(-35deg); }
+    40%  { opacity: 1; transform: scale(.4) rotate(-24deg); }
+    75%  { opacity: 1; transform: scale(1.1) rotate(4deg); }
     100% { opacity: 1; transform: scale(1) rotate(0); }
 }
 
@@ -412,89 +424,92 @@ body{
 .rose-petal{
     position: absolute;
     border-radius: 50%;
-    border: 3px solid rgba(160,45,90,.5);
+    border: 4px solid rgba(160,45,90,.5);
     background: linear-gradient(150deg,#ffdde8,#ee8db2 55%,#bc4470);
     box-shadow:
         inset 3px 3px 4px rgba(255,255,255,.45),
         inset -3px -3px 5px rgba(110,25,65,.22);
-    transform: scale(.2) rotateX(16deg);
+    transform: scale(.15) rotateX(16deg);
     opacity: 0;
 }
-.rose-head.open .rose-petal{ animation: rosePetal .9s cubic-bezier(.16,1,.3,1) forwards; }
+.rose-head.open .rose-petal{ animation: rosePetal 1.2s cubic-bezier(.16,1,.3,1) forwards; }
 @keyframes rosePetal{
-    from { opacity: 0; transform: scale(.2) rotate(-20deg) rotateX(16deg); }
-    70%  { opacity: 1; transform: scale(1.08) rotate(5deg) rotateX(16deg); }
+    from { opacity: 0; transform: scale(.15) rotate(-35deg) rotateX(16deg); }
+    45%  { opacity: 1; transform: scale(.5) rotate(-18deg) rotateX(16deg); }
+    75%  { opacity: 1; transform: scale(1.08) rotate(5deg) rotateX(16deg); }
     to   { opacity: 1; transform: scale(1) rotate(0) rotateX(16deg); }
 }
-.rp1{ width: 65px; height: 48px; left: 22px; top: 33px; }
-.rp2{ width: 60px; height: 45px; left: 40px; top: 20px; }
-.rp3{ width: 62px; height: 47px; left: 42px; top: 52px; }
-.rp4{ width: 55px; height: 43px; left: 17px; top: 54px; }
+.rp1{ width: 88px; height: 65px; left: 30px; top: 45px; }
+.rp2{ width: 81px; height: 61px; left: 54px; top: 27px; }
+.rp3{ width: 84px; height: 63px; left: 57px; top: 70px; }
+.rp4{ width: 74px; height: 58px; left: 23px; top: 73px; }
 
 .rose-center{
     position: absolute;
-    left: 47px; top: 43px;
-    width: 32px; height: 32px;
+    left: 63px; top: 58px;
+    width: 43px; height: 43px;
     border-radius: 50%;
     background: radial-gradient(circle at 32% 28%, #ffe3ec, #c8496f);
-    border: 5px solid #a83a63;
+    border: 6px solid #a83a63;
     z-index: 20;
     transform: scale(0);
 }
-.rose-head.open .rose-center{ animation: centerAppear .65s .55s cubic-bezier(.16,1,.3,1) forwards; }
+.rose-head.open .rose-center{ animation: centerAppear .8s .68s cubic-bezier(.16,1,.3,1) forwards; }
 
 /* =========================================================
    DAISY x4 — gathered lowest, inside the wrap
 ========================================================= */
-.daisy{ position: absolute; width: 126px; height: 190px; top: 380px; transform-style: preserve-3d; }
-.daisy.d1{ left: 2%; }
-.daisy.d2{ left: 28%; }
-.daisy.d3{ left: 54%; }
-.daisy.d4{ left: 80%; }
-.daisy .stem{ height: 120px; }
+.daisy{ position: absolute; width: 170px; height: 572px; top: 513px; left: 50%; transform-style: preserve-3d; }
+.daisy.d1{ transform: translateX(-50%) rotate(-26deg); transform-origin: 50% 100%; }
+.daisy.d2{ transform: translateX(-50%) rotate(-9deg);  transform-origin: 50% 100%; }
+.daisy.d3{ transform: translateX(-50%) rotate(9deg);   transform-origin: 50% 100%; }
+.daisy.d4{ transform: translateX(-50%) rotate(26deg);  transform-origin: 50% 100%; }
+.daisy .stem{ height: 477px; }
 
 .daisy-head{
     position: absolute;
-    width: 105px; height: 105px;
-    left: 10px; top: 0;
-    transform: scale(.1);
+    width: 142px; height: 142px;
+    left: 14px; top: 0;
+    transform: scale(.08);
     opacity: 0;
     transform-style: preserve-3d;
 }
-.daisy-head.open{ animation: daisyBloom 1.1s cubic-bezier(.16,1,.3,1) forwards; }
+.daisy-head.open{ animation: daisyBloom 1.3s cubic-bezier(.16,1,.3,1) forwards; }
 @keyframes daisyBloom{
-    from { opacity: 0; transform: scale(.1); }
-    65%  { opacity: 1; transform: scale(1.1); }
+    from { opacity: 0; transform: scale(.08); }
+    45%  { opacity: 1; transform: scale(.4); }
+    75%  { opacity: 1; transform: scale(1.1); }
     to   { opacity: 1; transform: scale(1); }
 }
 
 .daisy-petal{
     position: absolute;
-    left: 38px; top: 2px;
-    width: 29px; height: 55px;
+    left: 51px; top: 3px;
+    width: 39px; height: 74px;
     border-radius: 60% 60% 50% 50%;
     background: linear-gradient(100deg,#dcd9cf,#ffffff 42%,#f4f2eb 60%,#e5e2d8);
     transform-origin: 50% 100%;
-    transform: rotate(var(--angle)) rotateX(16deg) scaleY(.05);
+    transform: rotate(calc(var(--angle) * .12)) rotateX(16deg) scaleY(.1);
     opacity: 0;
     box-shadow:
         inset 3px 0 3px rgba(255,255,255,.6),
         2px 4px 5px rgba(90,80,70,.16);
 }
 .daisy-head.open .daisy-petal{
-    animation: daisyPetal .9s cubic-bezier(.16,1,.3,1) forwards;
-    animation-delay: calc(var(--i) * 50ms);
+    animation: daisyPetal 1.1s cubic-bezier(.16,1,.3,1) forwards;
+    animation-delay: calc(var(--i) * 55ms);
 }
 @keyframes daisyPetal{
-    from { opacity: 0; transform: rotate(var(--angle)) rotateX(16deg) scaleY(.05); }
-    65%  { opacity: 1; transform: rotate(var(--angle)) rotateX(16deg) scaleY(1.1); }
-    to   { opacity: 1; transform: rotate(var(--angle)) rotateX(16deg) scaleY(1); }
+    from { opacity: 0;  transform: rotate(calc(var(--angle) * .12)) rotateX(16deg) scaleY(.1); }
+    40%  { opacity: .6; transform: rotate(calc(var(--angle) * .4))  rotateX(16deg) scaleY(.35); }
+    70%  { opacity: 1;  transform: rotate(calc(var(--angle) * .9))  rotateX(16deg) scaleY(1.12); }
+    to   { opacity: 1;  transform: rotate(var(--angle)) rotateX(16deg) scaleY(1); }
 }
 
 .daisy-center{
     position: absolute;
-    left: 33px; top: 33px;
-    width: 39px; height: 39px;
+    left: 45px; top: 45px;
+    width: 53px; height: 53px;
     border-radius: 50%;
     background: radial-gradient(circle at 32% 26%, #fff5b0, #ffc91d 55%, #c98600 100%);
     box-shadow:
@@ -503,16 +518,16 @@ body{
     z-index: 20;
     transform: scale(0);
 }
-.daisy-head.open .daisy-center{ animation: centerAppear .7s .55s cubic-bezier(.16,1,.3,1) forwards; }
+.daisy-head.open .daisy-center{ animation: centerAppear .8s .68s cubic-bezier(.16,1,.3,1) forwards; }
 
 /* =========================================================
    RIBBON
 ========================================================= */
 .ribbon{
     position: absolute;
-    z-index: 16;
-    left: 50%; bottom: 46px;
-    width: 260px; height: 108px;
+    z-index: 32;
+    left: 50%; bottom: 62px;
+    width: 351px; height: 146px;
     transform: translateX(-50%) scale(0);
     opacity: 0;
 }
@@ -523,29 +538,29 @@ body{
     to   { opacity: 1; transform: translateX(-50%) scale(1); }
 }
 .ribbon-left, .ribbon-right{
-    position: absolute; top: 16px;
-    width: 108px; height: 64px;
+    position: absolute; top: 22px;
+    width: 146px; height: 86px;
     background: linear-gradient(145deg,#e7cf9f,#a8824f);
-    box-shadow: 3px 6px 9px rgba(80,60,30,.25);
+    box-shadow: 4px 8px 12px rgba(80,60,30,.25);
 }
 .ribbon-left{ right: 50%; border-radius: 15px 5px 45px 10px; transform: rotate(12deg); }
 .ribbon-right{ left: 50%; border-radius: 5px 15px 10px 45px; transform: rotate(-12deg); }
 .ribbon-center{
-    position: absolute; left: 50%; top: 30px;
-    width: 50px; height: 50px;
+    position: absolute; left: 50%; top: 41px;
+    width: 68px; height: 68px;
     transform: translateX(-50%);
-    border-radius: 10px;
+    border-radius: 12px;
     background: linear-gradient(145deg,#e2c592,#9c7c4c);
-    box-shadow: 0 5px 10px rgba(70,50,20,.25);
+    box-shadow: 0 6px 12px rgba(70,50,20,.25);
 }
 .ribbon-tail{
-    position: absolute; top: 60px;
-    width: 68px; height: 84px;
+    position: absolute; top: 81px;
+    width: 92px; height: 113px;
     background: linear-gradient(145deg,#d8bf8d,#9a7d51);
     clip-path: polygon(0 0,100% 0,76% 100%,48% 78%,20% 100%);
 }
-.ribbon-tail.left{ left: 62px; transform: rotate(8deg); }
-.ribbon-tail.right{ right: 62px; transform: scaleX(-1) rotate(8deg); }
+.ribbon-tail.left{ left: 84px; transform: rotate(8deg); }
+.ribbon-tail.right{ right: 84px; transform: scaleX(-1) rotate(8deg); }
 
 /* =========================================================
    SPARKLES
@@ -691,7 +706,6 @@ button{
    RESPONSIVE
 ========================================================= */
 @media (max-width: 640px){
-    .bouquet{ transform: scale(.72); transform-origin: top center; margin-top: 20px; }
     .controls{ flex-direction: column; gap: 8px; bottom: 16px; }
     button{ padding: 12px 24px; font-size: 13px; }
 }
@@ -707,7 +721,8 @@ button{
 
     <div class="hint-text" id="hintText">Sentuh setiap bunga untuk mengungkap maknanya 🌸</div>
 
-    <div class="bouquet">
+    <div class="bouquet-stage" id="bouquetStage">
+    <div class="bouquet" id="bouquetCanvas">
 
         <div class="paper-back" id="paperBack"></div>
 
@@ -716,8 +731,8 @@ button{
             <!-- SUNFLOWER TOP -->
             <div class="sunflower top" data-meaning="sun">
                 <div class="stem"></div>
-                <div class="leaf" style="left:8px;bottom:100px;transform:rotate(-35deg);"></div>
-                <div class="leaf" style="right:-6px;bottom:135px;transform:scaleX(-1) rotate(-30deg);"></div>
+                <div class="leaf" style="left:11px;bottom:774px;transform:rotate(-35deg);"></div>
+                <div class="leaf" style="right:-8px;bottom:821px;transform:scaleX(-1) rotate(-30deg);"></div>
                 <div class="sun-head" id="sunTop">
                     <div class="sun-petal" style="--angle:0deg;--i:0"></div>
                     <div class="sun-petal" style="--angle:30deg;--i:1"></div>
@@ -738,7 +753,7 @@ button{
             <!-- SUNFLOWER LEFT -->
             <div class="sunflower left" data-meaning="sun">
                 <div class="stem"></div>
-                <div class="leaf" style="left:8px;bottom:75px;"></div>
+                <div class="leaf" style="left:11px;bottom:656px;"></div>
                 <div class="sun-head" id="sunLeft">
                     <div class="sun-petal" style="--angle:0deg;--i:0"></div>
                     <div class="sun-petal" style="--angle:30deg;--i:1"></div>
@@ -759,7 +774,7 @@ button{
             <!-- SUNFLOWER RIGHT -->
             <div class="sunflower right" data-meaning="sun">
                 <div class="stem"></div>
-                <div class="leaf" style="right:0;bottom:80px;transform:scaleX(-1) rotate(-30deg);"></div>
+                <div class="leaf" style="right:0;bottom:663px;transform:scaleX(-1) rotate(-30deg);"></div>
                 <div class="sun-head" id="sunRight">
                     <div class="sun-petal" style="--angle:0deg;--i:0"></div>
                     <div class="sun-petal" style="--angle:30deg;--i:1"></div>
@@ -780,20 +795,20 @@ button{
             <!-- CARNATION (pinched by roses) -->
             <div class="carnation" data-meaning="carn">
                 <div class="stem"></div>
-                <div class="leaf" style="left:0;bottom:60px;"></div>
-                <div class="leaf" style="right:-2px;bottom:90px;transform:scaleX(-1) rotate(-30deg);"></div>
+                <div class="leaf" style="left:0;bottom:502px;"></div>
+                <div class="leaf" style="right:-3px;bottom:543px;transform:scaleX(-1) rotate(-30deg);"></div>
                 <div class="carnation-head" id="carnation">
-                    <div class="carnation-layer" style="--size:160px;--layer:0;"></div>
-                    <div class="carnation-layer" style="--size:135px;--layer:1;"></div>
-                    <div class="carnation-layer" style="--size:108px;--layer:2;"></div>
-                    <div class="carnation-layer" style="--size:82px;--layer:3;"></div>
+                    <div class="carnation-layer" style="--size:216px;--layer:0;"></div>
+                    <div class="carnation-layer" style="--size:182px;--layer:1;"></div>
+                    <div class="carnation-layer" style="--size:146px;--layer:2;"></div>
+                    <div class="carnation-layer" style="--size:111px;--layer:3;"></div>
                 </div>
             </div>
 
             <!-- ROSE LEFT -->
             <div class="rose left" data-meaning="rose">
                 <div class="stem"></div>
-                <div class="leaf" style="left:0;bottom:48px;"></div>
+                <div class="leaf" style="left:0;bottom:464px;"></div>
                 <div class="rose-head" id="roseLeft">
                     <div class="rose-outer"></div>
                     <div class="rose-petal rp1"></div>
@@ -807,7 +822,7 @@ button{
             <!-- ROSE RIGHT -->
             <div class="rose right" data-meaning="rose">
                 <div class="stem"></div>
-                <div class="leaf" style="right:0;bottom:52px;transform:scaleX(-1) rotate(-30deg);"></div>
+                <div class="leaf" style="right:0;bottom:469px;transform:scaleX(-1) rotate(-30deg);"></div>
                 <div class="rose-head" id="roseRight">
                     <div class="rose-outer"></div>
                     <div class="rose-petal rp1"></div>
@@ -902,6 +917,7 @@ button{
         <div class="sparkle" style="left:76%;top:60%"></div>
 
     </div>
+    </div>
 
     <div class="controls">
         <button id="bloomButton">🌱 Mulai Blooming</button>
@@ -923,7 +939,7 @@ button{
      BACKGROUND MUSIC
      Buat folder "music" di lokasi yang sama dengan file HTML
      ini, lalu taruh file mp3 kamu di sana. Ganti nama file di
-     bawah ("bgMusic.mp3") sesuai nama file mp3-mu.
+     bawah ("music/lagu.mp3") sesuai nama file mp3-mu.
      Contoh struktur folder:
        blooming-bouquet.html
        music/
@@ -1054,6 +1070,26 @@ const leaves   = document.querySelectorAll(".leaf");
 const sparkles = document.querySelectorAll(".sparkle");
 
 /* =========================================================
+   RESPONSIVE SCALING (halus, tanpa breakpoint yang patah-patah)
+========================================================= */
+const bouquetStage  = document.getElementById("bouquetStage");
+const bouquetCanvas = document.getElementById("bouquetCanvas");
+const NATURAL_W = 1000;
+const NATURAL_H = 1220;
+
+function scaleBouquet(){
+    const maxW = window.innerWidth * 0.94;
+    const maxH = window.innerHeight * 0.8;
+    const scale = Math.min(1, maxW / NATURAL_W, maxH / NATURAL_H);
+    bouquetCanvas.style.transform = "scale(" + scale + ")";
+    bouquetStage.style.width  = (NATURAL_W * scale) + "px";
+    bouquetStage.style.height = (NATURAL_H * scale) + "px";
+}
+scaleBouquet();
+window.addEventListener("resize", scaleBouquet);
+window.addEventListener("orientationchange", scaleBouquet);
+
+/* =========================================================
    BACKGROUND MUSIC
 ========================================================= */
 const bgMusic     = document.getElementById("bgMusic");
@@ -1099,49 +1135,53 @@ function startBloom(){
     button.innerHTML = "🌱 Bunga sedang tumbuh...";
     tryPlayMusic();
 
-    setTimeout(() => {
-        paperBack.style.transition = "opacity 1.5s ease, transform 1.8s cubic-bezier(.16,1,.3,1)";
-        paperBack.style.opacity = "1";
-        paperBack.style.transform = "translateX(-50%) scaleY(1)";
-    }, 200);
-
+    /* 1. tangkai tumbuh */
     setTimeout(() => {
         stems.forEach((stem, i) => setTimeout(() => stem.classList.add("grow-stem"), i*120));
-    }, 500);
+    }, 400);
 
     setTimeout(() => {
         leaves.forEach((leaf, i) => setTimeout(() => leaf.classList.add("show"), i*130));
     }, 1400);
 
-    setTimeout(() => sunTop.classList.add("open"),   2200);
-    setTimeout(() => sunLeft.classList.add("open"),  2450);
-    setTimeout(() => sunRight.classList.add("open"), 2600);
+    /* 2. ikat tangkai dengan pita — sebelum bunga mekar */
+    setTimeout(() => ribbon.classList.add("show"), 3400);
 
-    setTimeout(() => carnation.classList.add("open"), 3100);
+    /* 3. baru bunga mekar satu per satu */
+    setTimeout(() => sunTop.classList.add("open"),   4600);
+    setTimeout(() => sunLeft.classList.add("open"),  4900);
+    setTimeout(() => sunRight.classList.add("open"), 5100);
 
-    setTimeout(() => roseLeft.classList.add("open"),  3500);
-    setTimeout(() => roseRight.classList.add("open"), 3650);
+    setTimeout(() => carnation.classList.add("open"), 5700);
 
-    setTimeout(() => daisy1.classList.add("open"), 4050);
-    setTimeout(() => daisy2.classList.add("open"), 4200);
-    setTimeout(() => daisy3.classList.add("open"), 4350);
-    setTimeout(() => daisy4.classList.add("open"), 4500);
+    setTimeout(() => roseLeft.classList.add("open"),  6200);
+    setTimeout(() => roseRight.classList.add("open"), 6380);
+
+    setTimeout(() => daisy1.classList.add("open"), 6850);
+    setTimeout(() => daisy2.classList.add("open"), 7020);
+    setTimeout(() => daisy3.classList.add("open"), 7190);
+    setTimeout(() => daisy4.classList.add("open"), 7360);
+
+    /* 4. semua bunga sudah mekar penuh — baru sekarang dibungkus kertas */
+    setTimeout(() => {
+        paperBack.style.transition = "opacity 1.6s ease, transform 1.9s cubic-bezier(.16,1,.3,1)";
+        paperBack.style.opacity = "1";
+        paperBack.style.transform = "translateX(-50%) scaleY(1)";
+    }, 8900);
 
     setTimeout(() => {
-        paperFront.style.transition = "opacity 1.3s ease, transform 1.5s cubic-bezier(.16,1,.3,1)";
+        paperFront.style.transition = "opacity 1.4s ease, transform 1.6s cubic-bezier(.16,1,.3,1)";
         paperFront.style.opacity = "1";
         paperFront.style.transform = "translateX(-50%) scaleY(1)";
-    }, 4900);
-
-    setTimeout(() => ribbon.classList.add("show"), 5300);
+    }, 9300);
 
     setTimeout(() => {
         sparkles.forEach((sp, i) => setTimeout(() => sp.classList.add("active"), i*180));
-    }, 5900);
+    }, 10400);
 
-    setTimeout(() => hintText.classList.add("show"), 6400);
+    setTimeout(() => hintText.classList.add("show"), 10900);
 
-    setTimeout(() => { button.innerHTML = "🌸 Bloom Lagi"; }, 7400);
+    setTimeout(() => { button.innerHTML = "🌸 Bloom Lagi"; }, 11900);
 }
 
 button.addEventListener("click", startBloom);
