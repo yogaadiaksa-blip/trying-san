@@ -1191,3 +1191,153 @@ setTimeout(startBloom, 900);
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sparkle & Glitter Effect</title>
+<style>
+/* Reset & Latar Belakang Transparan/Gelap agar Efek Terlihat Jelas */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #0f0c1b; /* Latar gelap agar kilauan terlihat kontras */
+}
+
+/* Container Efek Sparkle */
+.sparkle-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+/* 1. Animasi Glitter (Partikel Bulat Bercahaya) */
+.glitter-particle {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffffff 0%, #ffe8a3 60%, rgba(255,215,0,0) 100%);
+    box-shadow: 0 0 10px #ffffff, 0 0 18px #ffd700;
+    pointer-events: none;
+    animation: continuousGlitter linear infinite;
+}
+
+@keyframes continuousGlitter {
+    0% {
+        opacity: 0;
+        transform: translateY(0) scale(0) rotate(0deg);
+    }
+    30% {
+        opacity: 0.9;
+        transform: translateY(-25px) scale(1.2) rotate(90deg);
+    }
+    70% {
+        opacity: 0.7;
+        transform: translateY(-60px) scale(0.8) rotate(180deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-90px) scale(0) rotate(270deg);
+    }
+}
+
+/* 2. Animasi Sparkle (Bintang Kerlip) */
+.star-sparkle {
+    position: absolute;
+    width: 14px; 
+    height: 14px;
+    pointer-events: none;
+    animation: continuousStar ease-in-out infinite alternate;
+}
+
+.star-sparkle::before, .star-sparkle::after {
+    content: '';
+    position: absolute;
+    background: #ffffff;
+    box-shadow: 0 0 10px #ffe599, 0 0 15px #ffffff;
+    border-radius: 2px;
+}
+
+.star-sparkle::before { top: 6px; left: 0; width: 14px; height: 2px; }
+.star-sparkle::after { top: 0; left: 6px; width: 2px; height: 14px; }
+
+@keyframes continuousStar {
+    0% { 
+        opacity: 0; 
+        transform: scale(0.2) rotate(0deg); 
+    }
+    50% { 
+        opacity: 1; 
+        transform: scale(1.4) rotate(90deg); 
+    }
+    100% { 
+        opacity: 0; 
+        transform: scale(0.2) rotate(180deg); 
+    }
+}
+</style>
+</head>
+<body>
+
+    <!-- Container Utama Animasi -->
+    <div class="sparkle-container" id="sparkleContainer"></div>
+
+    <script>
+    function startContinuousSparkles() {
+        const container = document.getElementById('sparkleContainer');
+
+        // Partikel Glitter (Terus-menerus)
+        setInterval(() => {
+            const glitter = document.createElement('div');
+            glitter.className = 'glitter-particle';
+            
+            const size = Math.random() * 6 + 3; // Ukuran 3px - 9px
+            const left = Math.random() * 100;   // Posisi horizontal
+            const top = Math.random() * 80 + 10; // Posisi vertikal
+            const duration = Math.random() * 2 + 2; // Durasi animasi
+
+            glitter.style.width = `${size}px`;
+            glitter.style.height = `${size}px`;
+            glitter.style.left = `${left}%`;
+            glitter.style.top = `${top}%`;
+            glitter.style.animationDuration = `${duration}s`;
+
+            container.appendChild(glitter);
+
+            setTimeout(() => glitter.remove(), duration * 1000);
+        }, 150);
+
+        // Bintang Sparkle Kerlip (Terus-menerus)
+        setInterval(() => {
+            const star = document.createElement('div');
+            star.className = 'star-sparkle';
+            
+            const left = Math.random() * 90 + 5;
+            const top = Math.random() * 80 + 10;
+            const duration = Math.random() * 1.5 + 1.5;
+
+            star.style.left = `${left}%`;
+            star.style.top = `${top}%`;
+            star.style.animationDuration = `${duration}s`;
+
+            container.appendChild(star);
+
+            setTimeout(() => star.remove(), duration * 1000);
+        }, 300);
+    }
+
+    // Jalankan animasi saat file dibuka
+    window.addEventListener('DOMContentLoaded', startContinuousSparkles);
+    </script>
+
+</body>
+</html> 
